@@ -4,11 +4,11 @@ const fs = require('fs');
 const { spawn } = require('child_process');
 const http = require('http');
 
-// ================= GIỮ BOT ONLINE 24/7 TRÊN RENDER =================
+// ================= GIỮ BOT ONLINE TRÊN RENDER =================
 const port = process.env.PORT || 3000;
 http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('QUAN DOAN PRO ONLINE');
+    res.end('QUAN DOAN PRO - FULL OPTION IS READY');
 }).listen(port);
 
 if (typeof File === 'undefined') { global.File = class {}; }
@@ -49,9 +49,7 @@ function setSpotifyStatus(client) {
             .setEndTimestamp(Date.now() + 3600000);
         
         client.user.setPresence({ activities: [spotify.toJSON()] });
-    } catch (err) {
-        console.log(`❌ Không thể treo Spotify cho ${client.user.username}`);
-    }
+    } catch (err) {}
 }
 
 const initArmy = () => {
@@ -59,7 +57,19 @@ const initArmy = () => {
     clients = [];
     tokens = loadTokens();
     tokens.forEach((token) => {
-        const client = new Client({ checkUpdate: false });
+        // FIX LỖI TYPEERROR NULL (READING ALL) TRÊN RENDER
+        const client = new Client({ 
+            checkUpdate: false,
+            patchVoice: true,
+            ws: { 
+                properties: { 
+                    $os: 'Linux', 
+                    $browser: 'Discord Client', 
+                    $device: 'discord.js' 
+                } 
+            }
+        });
+        
         client.login(token).catch(() => {});
         
         client.on('ready', () => {
@@ -113,21 +123,15 @@ async function startAppoArmy(vId, guildId, fileName) {
 
 const commander = () => clients[0];
 
-commander()?.on('ready', () => { 
-    console.log("\n" + "=".repeat(45));
-    console.log("   QUÂN ĐOÀN PRO - FULL FIXED READY   ");
-    console.log("=".repeat(45));
-});
-
 commander()?.on('messageCreate', async (m) => {
-    if (!m.content.startsWith(Prefix) || m.author.id !== commander().user.id) return;
+    if (!m.content.startsWith(Prefix) || m.author.id !== commander()?.user?.id) return;
     const args = m.content.slice(Prefix.length).trim().split(/ +/);
     const cmd = args.shift().toLowerCase();
     await m.delete().catch(() => {});
 
     switch (cmd) {
         case "menu":
-            m.channel.send("```ansi\n[1;35m┏━━━━━━━━━━━ QUÂN ĐOÀN PRO - FULL OPTION ━━━━━━━━━━━┓[0m\n  [1;32m⚔️  " + Prefix + "thamgia <link>      [1;30m(Delay 15s)[0m\n  [1;32m⚔️  " + Prefix + "treongon <f> <ms> <t> [0m\n  [1;35m🎤  " + Prefix + "mic <file> <id>       [1;31m(APPO MAX GAIN)[0m\n  [1;36m🔊  " + Prefix + "voice <id_room>       [1;30m(Treo room)[0m\n  [1;33m🔍  " + Prefix + "chcktoken             [0m\n  [1;34m➕  " + Prefix + "addtoken <token>      [0m\n  [1;31m➖  " + Prefix + "deltoken <stt>        [0m\n  [1;31m🛑  " + Prefix + "stop                  [1;31m(DỪNG HẾT MIU/MIC)[0m\n[1;35m┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛[0m```");
+            m.channel.send("```ansi\n[1;35m┏━━━━━━━━━━━ QUÂN ĐOÀN PRO - FULL OPTION ━━━━━━━━━━━┓[0m\n  [1;32m⚔️  " + Prefix + "thamgia <link>      [1;30m(Delay 15s)[0m\n  [1;32m⚔️  " + Prefix + "treongon <f> <ms> <t> [0m\n  [1;35m🎤  " + Prefix + "mic <file> <id>       [1;31m(APPO MAX GAIN)[0m\n  [1;36m🔊  " + Prefix + "voice <id_room>       [1;30m(Treo room)[0m\n  [1;33m🔍  " + Prefix + "chcktoken             [0m\n  [1;34m➕  " + Prefix + "addtoken <token>      [0m\n  [1;31m➖  " + Prefix + "deltoken <stt>        [0m\n  [1;31m🛑  " + Prefix + "stop                  [1;31m(DỪNG HẾT MIU/MIC)[0m\n  [1;34m🔄  " + Prefix + "reload                [0m\n[1;35m┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛[0m```");
             break;
 
         case "thamgia":
@@ -224,4 +228,4 @@ commander()?.on('messageCreate', async (m) => {
             break;
     }
 });
-                                                    
+                   
