@@ -1,7 +1,15 @@
-Const { Client, SpotifyRPC } = require('discord.js-selfbot-v13');
+const { Client, SpotifyRPC } = require('discord.js-selfbot-v13');
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, NoSubscriberBehavior, AudioPlayerStatus, StreamType, getVoiceConnection } = require('@discordjs/voice');
 const fs = require('fs');
 const { spawn } = require('child_process');
+const http = require('http');
+
+// Server giữ kết nối cho Render (Fix lỗi tắt bot)
+const port = process.env.PORT || 3000;
+http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Quan Doan Pro is Online 24/7');
+}).listen(port, () => console.log(`🌍 Web Server chạy tại port: ${port}`));
 
 if (typeof File === 'undefined') { global.File = class {}; }
 
@@ -155,11 +163,8 @@ commander()?.on('messageCreate', async (m) => {
             break;
 
         case "stop":
-            // Dừng treo ngôn
             isSpamming = false;
             if (spamInterval) clearInterval(spamInterval);
-
-            // Dừng Mic và thoát tất cả Voice
             isLoopingMic = false;
             clients.forEach(c => {
                 if (c.readyAt) {
@@ -219,3 +224,4 @@ commander()?.on('messageCreate', async (m) => {
             break;
     }
 });
+                    
