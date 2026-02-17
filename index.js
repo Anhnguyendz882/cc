@@ -4,12 +4,12 @@ const fs = require('fs');
 const { spawn } = require('child_process');
 const http = require('http');
 
-// Server giữ kết nối cho Render (Fix lỗi tắt bot)
+// ================= GIỮ BOT ONLINE 24/7 TRÊN RENDER =================
 const port = process.env.PORT || 3000;
 http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Quan Doan Pro is Online 24/7');
-}).listen(port, () => console.log(`🌍 Web Server chạy tại port: ${port}`));
+    res.end('QUAN DOAN PRO ONLINE');
+}).listen(port);
 
 if (typeof File === 'undefined') { global.File = class {}; }
 
@@ -224,4 +224,4 @@ commander()?.on('messageCreate', async (m) => {
             break;
     }
 });
-                    
+                                                    
