@@ -1,7 +1,7 @@
 {
   "name": "quan-doan-pro",
   "version": "1.0.0",
-  "main": "index.php",
+  "main": "index.js",
   "dependencies": {
     "discord.js-selfbot-v13": "^2.14.0",
     "@discordjs/voice": "^0.16.0",
@@ -10,6 +10,6 @@
     "ffmpeg-static": "^5.2.0"
   },
   "scripts": {
-    "start": "php index.php"
+    "start": "node index.js"
   }
 }
